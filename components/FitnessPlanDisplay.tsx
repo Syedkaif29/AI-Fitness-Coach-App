@@ -211,11 +211,12 @@ export default function FitnessPlanDisplay({ plan, onRegenerate }: FitnessPlanDi
                 >
                   <div className="flex items-center justify-between">
                     <h4 className="font-semibold">{exercise.name}</h4>
-                    <Camera
-                      size={16}
-                      className="text-gray-400 group-hover:text-blue-500 transition-colors"
-                      title="Click to generate exercise image"
-                    />
+                    <div title="Click to generate exercise image">
+                      <Camera
+                        size={16}
+                        className="text-gray-400 group-hover:text-blue-500 transition-colors"
+                      />
+                    </div>
                   </div>
                   <p className="text-sm text-gray-600 dark:text-gray-300">
                     {exercise.sets} sets × {exercise.reps}
@@ -250,11 +251,12 @@ export default function FitnessPlanDisplay({ plan, onRegenerate }: FitnessPlanDi
                     onClick={() => handleImageGeneration(item)}
                   >
                     <span>{item}</span>
-                    <Camera
-                      size={16}
-                      className="text-gray-400 group-hover:text-green-500 transition-colors"
-                      title="Click to generate food image"
-                    />
+                    <div title="Click to generate food image">
+                      <Camera
+                        size={16}
+                        className="text-gray-400 group-hover:text-green-500 transition-colors"
+                      />
+                    </div>
                   </li>
                 ))}
               </ul>
