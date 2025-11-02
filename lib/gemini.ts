@@ -74,43 +74,43 @@ Generate a 7-day workout plan with appropriate exercises for their fitness level
 
   // Try multiple models until one works
   let lastError: Error | null = null;
-  
+
   for (const modelName of GEMINI_MODELS) {
     try {
       console.log('Trying Gemini model:', modelName);
-      
+
       const model = genAI.getGenerativeModel({ model: modelName });
-      
+
       const result = await model.generateContent(prompt);
       const response = result.response;
       const text = response.text();
-      
+
       console.log('✅ Successfully used model:', modelName);
-      
+
       // Extract JSON from markdown code blocks if present
       const jsonMatch = text.match(/```json\n([\s\S]*?)\n```/) || text.match(/```\n([\s\S]*?)\n```/);
       const jsonText = jsonMatch ? jsonMatch[1] : text;
-      
+
       return JSON.parse(jsonText);
-      
+
     } catch (error) {
       console.log('❌ Failed with model:', modelName, error);
       lastError = error as Error;
-      
+
       // If it's a model not found error, try the next model
       if (error instanceof Error && (
-        error.message.includes('not found') || 
+        error.message.includes('not found') ||
         error.message.includes('404') ||
         error.message.includes('does not exist')
       )) {
         continue;
       }
-      
+
       // For other errors (like rate limits, auth issues), throw immediately
       throw error;
     }
   }
-  
+
   // All models failed
   throw new Error(
     `All Gemini models failed. Last error: ${lastError?.message || 'Unknown error'}. ` +
@@ -133,26 +133,29 @@ export async function generateImage(prompt: string): Promise<string> {
 
   try {
     console.log('Generating image with Gemini for:', prompt);
-    
+
     // Use the Gemini image generation model with legacy responseModalities
-    const model = genAI.getGenerativeModel({ 
+    const model = genAI.getGenerativeModel({
       model: 'gemini-2.0-flash-preview-image-generation'
     });
-    
+
     const enhancedPrompt = `Generate a high-quality, realistic image of: ${prompt}. Make it clear, well-lit, and suitable for a fitness app. Style: photographic, professional, clean background. Return both a description and generate an image.`;
-    
+
     const result = await model.generateContent({
       contents: [{
         role: 'user',
         parts: [{
           text: enhancedPrompt
         }]
-      }]
+      }],
+      generationConfig: {
+        responseModalities: ["TEXT", "IMAGE"]
+      } as any
     });
-    
+
     const response = result.response;
     const text = response.text();
-    
+
     try {
       const jsonResponse = JSON.parse(text);
       if (jsonResponse.image) {
@@ -162,11 +165,11 @@ export async function generateImage(prompt: string): Promise<string> {
     } catch (parseError) {
       console.log('Could not parse JSON response, checking for image data...');
     }
-    
+
     // Check if the response contains image data in parts
     if (response.candidates && response.candidates[0]) {
       const candidate = response.candidates[0];
-      
+
       if (candidate.content && candidate.content.parts) {
         for (const part of candidate.content.parts) {
           if (part.inlineData && part.inlineData.mimeType?.startsWith('image/')) {
@@ -175,29 +178,29 @@ export async function generateImage(prompt: string): Promise<string> {
             const mimeType = part.inlineData.mimeType;
             const byteCharacters = atob(base64Data);
             const byteNumbers = new Array(byteCharacters.length);
-            
+
             for (let i = 0; i < byteCharacters.length; i++) {
               byteNumbers[i] = byteCharacters.charCodeAt(i);
             }
-            
+
             const byteArray = new Uint8Array(byteNumbers);
             const blob = new Blob([byteArray], { type: mimeType });
             const imageUrl = URL.createObjectURL(blob);
-            
+
             console.log('✅ Successfully generated image with Gemini');
             return imageUrl;
           }
         }
       }
     }
-    
+
     // If no image was generated, fall back to local placeholder
     console.log('⚠️ No image generated, using local placeholder');
     return createLocalPlaceholder(prompt);
-    
+
   } catch (error) {
     console.error('❌ Failed to generate image with Gemini:', error);
-    
+
     // Fall back to local placeholder on error
     return createLocalPlaceholder(prompt);
   }
@@ -207,7 +210,7 @@ export async function generateImage(prompt: string): Promise<string> {
 function createLocalPlaceholder(text: string): string {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
-  
+
   if (!ctx) {
     // If canvas is not available, return a data URL
     return 'data:image/svg+xml;base64,' + btoa(`
@@ -219,31 +222,31 @@ function createLocalPlaceholder(text: string): string {
       </svg>
     `);
   }
-  
+
   canvas.width = 400;
   canvas.height = 300;
-  
+
   // Background
   ctx.fillStyle = '#f0f0f0';
   ctx.fillRect(0, 0, 400, 300);
-  
+
   // Text
   ctx.fillStyle = '#666';
   ctx.font = '16px Arial';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  
+
   // Wrap text if too long
   const maxWidth = 360;
   const words = text.split(' ');
   let line = '';
   let y = 150;
-  
+
   for (let n = 0; n < words.length; n++) {
     const testLine = line + words[n] + ' ';
     const metrics = ctx.measureText(testLine);
     const testWidth = metrics.width;
-    
+
     if (testWidth > maxWidth && n > 0) {
       ctx.fillText(line, 200, y);
       line = words[n] + ' ';
@@ -253,6 +256,6 @@ function createLocalPlaceholder(text: string): string {
     }
   }
   ctx.fillText(line, 200, y);
-  
+
   return canvas.toDataURL();
 }
