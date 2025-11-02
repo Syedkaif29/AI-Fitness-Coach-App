@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { FitnessPlan } from '@/types';
 import { motion } from 'framer-motion';
-import { Dumbbell, Utensils, Lightbulb, Heart, Volume2, Download, RefreshCw } from 'lucide-react';
+import { Dumbbell, Utensils, Lightbulb, Heart, Volume2, Download, RefreshCw, Camera } from 'lucide-react';
 import { textToSpeech } from '@/lib/elevenlabs';
 import { generateImage } from '@/lib/gemini';
 import jsPDF from 'jspdf';
@@ -206,10 +206,17 @@ export default function FitnessPlanDisplay({ plan, onRegenerate }: FitnessPlanDi
               {day.exercises.map((exercise, exIdx) => (
                 <div
                   key={exIdx}
-                  className="mb-4 p-3 bg-gray-50 dark:bg-gray-700 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  className="mb-4 p-3 bg-gray-50 dark:bg-gray-700 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors group"
                   onClick={() => handleImageGeneration(exercise.name)}
                 >
-                  <h4 className="font-semibold">{exercise.name}</h4>
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-semibold">{exercise.name}</h4>
+                    <Camera
+                      size={16}
+                      className="text-gray-400 group-hover:text-blue-500 transition-colors"
+                      title="Click to generate exercise image"
+                    />
+                  </div>
                   <p className="text-sm text-gray-600 dark:text-gray-300">
                     {exercise.sets} sets × {exercise.reps}
                   </p>
@@ -239,10 +246,15 @@ export default function FitnessPlanDisplay({ plan, onRegenerate }: FitnessPlanDi
                 {meal.items.map((item, itemIdx) => (
                   <li
                     key={itemIdx}
-                    className="p-2 bg-gray-50 dark:bg-gray-700 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                    className="p-2 bg-gray-50 dark:bg-gray-700 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors group flex items-center justify-between"
                     onClick={() => handleImageGeneration(item)}
                   >
-                    {item}
+                    <span>{item}</span>
+                    <Camera
+                      size={16}
+                      className="text-gray-400 group-hover:text-green-500 transition-colors"
+                      title="Click to generate food image"
+                    />
                   </li>
                 ))}
               </ul>
