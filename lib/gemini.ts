@@ -141,17 +141,13 @@ export async function generateImage(prompt: string): Promise<string> {
     
     const enhancedPrompt = `Generate a high-quality, realistic image of: ${prompt}. Make it clear, well-lit, and suitable for a fitness app. Style: photographic, professional, clean background. Return both a description and generate an image.`;
     
-    // @ts-expect-error - Using legacy responseModalities for compatibility with free-tier models
     const result = await model.generateContent({
       contents: [{
         role: 'user',
         parts: [{
           text: enhancedPrompt
         }]
-      }],
-      generationConfig: {
-        responseModalities: ["TEXT", "IMAGE"]
-      }
+      }]
     });
     
     const response = result.response;
