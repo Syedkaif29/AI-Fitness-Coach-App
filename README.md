@@ -2,6 +2,16 @@
 
 An AI-powered fitness assistant built with **Next.js** that generates **personalized workout and diet plans** using Google Gemini AI.
 
+🌐 **Live Demo**: [https://ai-fitness-coach-app-three.vercel.app/](https://ai-fitness-coach-app-three.vercel.app/)
+
+## 📸 Screenshots
+
+### Fitness Details Form
+![Fitness Details](./public/fitness%20detail.png)
+
+### App Demo
+![App Demo](./public/demo.png)
+
 ## 🚀 Features
 
 - **Personalized Plans**: AI-generated workout and diet plans based on user profile
@@ -27,27 +37,32 @@ An AI-powered fitness assistant built with **Next.js** that generates **personal
 ## 📦 Installation
 
 1. Clone the repository:
+
 ```bash
 git clone <your-repo-url>
 cd fitness-coach-app
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Create a `.env.local` file in the root directory:
+
 ```env
 NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key_here
 NEXT_PUBLIC_ELEVENLABS_API_KEY=your_elevenlabs_api_key_here
 ```
 
 4. Get your API keys:
+
    - **Gemini API**: Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
    - **ElevenLabs API**: Visit [ElevenLabs](https://elevenlabs.io/)
 
 5. Run the development server:
+
 ```bash
 npm run dev
 ```
@@ -109,6 +124,7 @@ fitness-coach-app/
 ## 📝 Features Breakdown
 
 ### User Input
+
 - Name, Age, Gender
 - Height & Weight
 - Fitness Goal (Weight Loss, Muscle Gain, Maintenance, Endurance)
@@ -119,12 +135,14 @@ fitness-coach-app/
 - Stress Level (Optional)
 
 ### AI-Generated Content
+
 - 7-day workout plan with exercises, sets, reps, and rest times
 - Daily diet plan with breakfast, lunch, dinner, and snacks
 - Lifestyle and posture tips
 - Motivational messages
 
 ### Additional Features
+
 - Voice narration of plans
 - Image generation for exercises and meals
 - PDF export functionality
@@ -138,11 +156,11 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📄 License
 
-This project is open source and available under the MIT License.
+This project is open source and available under the [MIT License](LICENSE).
 
 ## 👨‍💻 Author
 
-Built with ❤️ for the Full Stack Developer role assignment
+Created by [Syedkaif29](https://github.com/Syedkaif29) - Built with ❤️ for the Full Stack Developer role assignment
 
 ## 🙏 Acknowledgments
 
